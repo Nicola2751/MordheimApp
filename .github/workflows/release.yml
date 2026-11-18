@@ -1,0 +1,81 @@
+name: Release
+
+# Si attiva con un tag di versione (es. v0.1.0). Il tag deve coincidere con "version" in package.json.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Il tag corrisponde a package.json
+        run: |
+          v=$(node -p "require('./package.json').version")
+          [ "v$v" = "${GITHUB_REF_NAME}" ] || { echo "Tag ${GITHUB_REF_NAME} diverso da package.json ($v)"; exit 1; }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+      - run: cp dist/index.html dist/404.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+  android:
+    needs: web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+      - run: npx cap add android
+      - run: npx cap sync android
+      - name: Chiave di firma (opzionale)
+        env:
+          KS: ${{ secrets.ANDROID_DEBUG_KEYSTORE }}
+        run: |
+          # Con il secret, ogni release si installa sopra la precedente. Senza, Android la tratta come app diversa.
+          if [ -n "$KS" ]; then
+            mkdir -p ~/.android
+            echo "$KS" | base64 -d > ~/.android/debug.keystore
+          fi
+      - run: ./gradlew assembleDebug
+        working-directory: android
+      - run: cp android/app/build/outputs/apk/debug/app-debug.apk mordheim.apk
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: mordheim.apk
+          generate_release_notes: true

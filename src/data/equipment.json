@@ -1,0 +1,5 @@
+[
+  { "id": "esempio-arma", "name": "Arma di esempio", "category": "Armi da mischia", "cost": 10, "notes": "Segnaposto." },
+  { "id": "esempio-tiro", "name": "Arma da tiro di esempio", "category": "Armi da tiro", "cost": 15, "notes": "Segnaposto." },
+  { "id": "esempio-armatura", "name": "Armatura di esempio", "category": "Armature", "cost": 20, "notes": "Segnaposto." }
+]

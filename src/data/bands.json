@@ -1,0 +1,19 @@
+[
+  {
+    "id": "esempio",
+    "name": "Banda di esempio",
+    "startGold": 500,
+    "maxModels": 15,
+    "notes": "Segnaposto. Sostituiscilo con le bande del tuo manuale (vedi src/data/README.md).",
+    "heroes": [
+      { "id": "capo", "name": "Capo (esempio)", "role": "Capo", "cost": 60, "max": 1,
+        "stats": { "M": 4, "AC": 4, "AB": 3, "F": 3, "R": 3, "Fe": 1, "I": 4, "A": 1, "Ld": 8 } },
+      { "id": "veterano", "name": "Veterano (esempio)", "role": "Eroe", "cost": 40, "max": 3,
+        "stats": { "M": 4, "AC": 3, "AB": 3, "F": 3, "R": 3, "Fe": 1, "I": 3, "A": 1, "Ld": 7 } }
+    ],
+    "henchmen": [
+      { "id": "seguace", "name": "Seguace (esempio)", "role": "Seguace", "cost": 25,
+        "stats": { "M": 4, "AC": 3, "AB": 3, "F": 3, "R": 3, "Fe": 1, "I": 3, "A": 1, "Ld": 6 } }
+    ]
+  }
+]

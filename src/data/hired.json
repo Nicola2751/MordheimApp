@@ -1,0 +1,11 @@
+[
+  {
+    "id": "esempio-mercenario",
+    "name": "Mercenario di esempio",
+    "role": "Mercenario",
+    "cost": 30,
+    "upkeep": 15,
+    "notes": "Segnaposto. Il mantenimento è la cifra da pagare dopo ogni battaglia.",
+    "stats": { "M": 4, "AC": 3, "AB": 3, "F": 3, "R": 3, "Fe": 1, "I": 3, "A": 1, "Ld": 7 }
+  }
+]
