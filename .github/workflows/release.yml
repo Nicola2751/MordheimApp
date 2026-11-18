@@ -4,6 +4,7 @@ name: Release
 on:
   push:
     tags: ['v*']
+  workflow_dispatch: # pulsante "Run workflow" in Actions: pubblica solo il sito, senza APK
 
 permissions:
   contents: write
@@ -23,6 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Il tag corrisponde a package.json
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           v=$(node -p "require('./package.json').version")
           [ "v$v" = "${GITHUB_REF_NAME}" ] || { echo "Tag ${GITHUB_REF_NAME} diverso da package.json ($v)"; exit 1; }
@@ -44,6 +46,7 @@ jobs:
 
   android:
     needs: web
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
