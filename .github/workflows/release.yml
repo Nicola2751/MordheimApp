@@ -1,8 +1,10 @@
 name: Release
 
-# Si attiva con un tag di versione (es. v0.1.0). Il tag deve coincidere con "version" in package.json.
+# Ogni push su main pubblica il sito su GitHub Pages.
+# Un tag di versione (es. v0.1.0, uguale a "version" in package.json) pubblica anche l'APK Android.
 on:
   push:
+    branches: [main]
     tags: ['v*']
   workflow_dispatch: # pulsante "Run workflow" in Actions: pubblica solo il sito, senza APK
 
